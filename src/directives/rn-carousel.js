@@ -64,13 +64,13 @@
                     display: 'inline-block'
                 },
                 opacity,
-                absoluteLeft = (slideIndex * 100) + offset,
-                slideTransformValue = DeviceCapabilities.has3d ? 'translate3d(' + absoluteLeft + '%, 0, 0)' : 'translate3d(' + absoluteLeft + '%, 0)',
-                distance = ((100 - Math.abs(absoluteLeft)) / 100);
+                absoluteLeft = (slideIndex * 500) + offset,
+                slideTransformValue = DeviceCapabilities.has3d ? 'translate3d(' + absoluteLeft + 'px, 0, 0)' : 'translate3d(' + absoluteLeft + 'px, 0)',
+                distance = ((500 - Math.abs(absoluteLeft)) / 500);
 
             if (!DeviceCapabilities.transformProperty) {
                 // fallback to default slide if transformProperty is not available
-                style['margin-left'] = absoluteLeft + '%';
+                style['margin-left'] = absoluteLeft + 'px';
             } else {
                 if (transitionType == 'fadeAndSlide') {
                     style[DeviceCapabilities.transformProperty] = slideTransformValue;
@@ -84,8 +84,8 @@
                         degrees = 0,
                         maxDegrees = 60 * (distance - 1);
 
-                    transformFrom = offset < (slideIndex * -100) ? 100 : 0;
-                    degrees = offset < (slideIndex * -100) ? maxDegrees : -maxDegrees;
+                    transformFrom = offset < (slideIndex * -500) ? 500 : 0;
+                    degrees = offset < (slideIndex * -500) ? maxDegrees : -maxDegrees;
                     style[DeviceCapabilities.transformProperty] = slideTransformValue + ' ' + 'rotateY(' + degrees + 'deg)';
                     style[DeviceCapabilities.transformProperty + '-origin'] = transformFrom + '% 50%';
                 } else if (transitionType == 'zoom') {
@@ -277,7 +277,7 @@
                             slideOptions = slideOptions || {};
                             if (slideOptions.animate === false || options.transitionType === 'none') {
                                 locked = false;
-                                offset = index * -100;
+                                offset = index * -500;
                                 scope.carouselIndex = index;
                                 updateBufferIndex();
                                 return;
@@ -290,7 +290,7 @@
                                     'x': offset
                                 },
                                 to: {
-                                    'x': index * -100
+                                    'x': index * -500
                                 },
                                 duration: options.transitionDuration,
                                 easing: options.transitionEasing,
@@ -300,7 +300,7 @@
                                 finish: function() {
                                     scope.$apply(function() {
                                         scope.carouselIndex = index;
-                                        offset = index * -100;
+                                        offset = index * -500;
                                         updateBufferIndex();
                                         $timeout(function () {
                                           locked = false;

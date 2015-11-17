@@ -143,13 +143,13 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                     display: 'inline-block'
                 },
                 opacity,
-                absoluteLeft = (slideIndex * 100) + offset,
-                slideTransformValue = DeviceCapabilities.has3d ? 'translate3d(' + absoluteLeft + '%, 0, 0)' : 'translate3d(' + absoluteLeft + '%, 0)',
-                distance = ((100 - Math.abs(absoluteLeft)) / 100);
+                absoluteLeft = (slideIndex * 500) + offset,
+                slideTransformValue = DeviceCapabilities.has3d ? 'translate3d(' + absoluteLeft + 'px, 0, 0)' : 'translate3d(' + absoluteLeft + 'px, 0)',
+                distance = ((500 - Math.abs(absoluteLeft)) / 500) + 500;
 
             if (!DeviceCapabilities.transformProperty) {
                 // fallback to default slide if transformProperty is not available
-                style['margin-left'] = absoluteLeft + '%';
+                style['margin-left'] = absoluteLeft + 'px';
             } else {
                 if (transitionType == 'fadeAndSlide') {
                     style[DeviceCapabilities.transformProperty] = slideTransformValue;
@@ -281,7 +281,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         var pressed,
                             startX,
                             isIndexBound = false,
-                            offset = 0,
+                            offset = 500,
                             destination,
                             swipeMoved = false,
                             //animOnIndexChange = true,
@@ -322,7 +322,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         function updateSlidesPosition(offset) {
                             // manually apply transformation to carousel childrens
                             // todo : optim : apply only to visible items
-                            var x = scope.carouselBufferIndex * 100 + offset;
+                            var x = scope.carouselBufferIndex * 500 + offset;
                             angular.forEach(getSlidesDOM(), function(child, index) {
                                 child.style.cssText = createStyleString(computeCarouselSlideStyle(index, x, options.transitionType));
                             });
@@ -356,7 +356,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                             slideOptions = slideOptions || {};
                             if (slideOptions.animate === false || options.transitionType === 'none') {
                                 locked = false;
-                                offset = index * -100;
+                                offset = index * -500 + 500;
                                 scope.carouselIndex = index;
                                 updateBufferIndex();
                                 return;
@@ -369,7 +369,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                     'x': offset
                                 },
                                 to: {
-                                    'x': index * -100
+                                    'x': index * -500 + 500
                                 },
                                 duration: options.transitionDuration,
                                 easing: options.transitionEasing,
@@ -379,7 +379,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                 finish: function() {
                                     scope.$apply(function() {
                                         scope.carouselIndex = index;
-                                        offset = index * -100;
+                                        offset = index * -500 + 500;
                                         updateBufferIndex();
                                         $timeout(function () {
                                           locked = false;
@@ -433,7 +433,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                 delta = startX - x;
                                 if (delta > 2 || delta < -2) {
                                     swipeMoved = true;
-                                    var moveOffset = offset + (-delta * 100 / elWidth);
+                                    var moveOffset = offset + (-delta * 500 / elWidth);
                                     updateSlidesPosition(moveOffset);
                                 }
                             }
@@ -577,7 +577,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                             if (locked) {
                                 return;
                             }
-                            offset += (-destination * 100 / elWidth);
+                            offset += (-destination * 500 / elWidth);
                             if (options.isSequential) {
                                 var minMove = options.moveTreshold * elWidth,
                                     absMove = -destination,
