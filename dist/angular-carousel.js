@@ -13,6 +13,14 @@ http://github.com/revolunet/angular-carousel
 
 */
 
+var width = window.innerWidth
+|| document.documentElement.clientWidth
+|| document.body.clientWidth;
+
+var height = window.innerHeight
+|| document.documentElement.clientHeight
+|| document.body.clientHeight;
+
 angular.module('angular-carousel', [
     'ngTouch',
     'angular-carousel.shifty'
@@ -139,13 +147,14 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
     .service('computeCarouselSlideStyle', ["DeviceCapabilities", function(DeviceCapabilities) {
         // compute transition transform properties for a given slide and global offset
         return function(slideIndex, offset, transitionType) {
+          
             var style = {
                     display: 'inline-block'
                 },
                 opacity,
-                absoluteLeft = (slideIndex * 500) + offset,
+                absoluteLeft = (slideIndex * (width / 3)) + offset,
                 slideTransformValue = DeviceCapabilities.has3d ? 'translate3d(' + absoluteLeft + 'px, 0, 0)' : 'translate3d(' + absoluteLeft + 'px, 0)',
-                distance = ((500 - Math.abs(absoluteLeft)) / 500) + 500;
+                distance = (((width / 3) - Math.abs(absoluteLeft)) / (width / 3)) + (width / 3);
 
             if (!DeviceCapabilities.transformProperty) {
                 // fallback to default slide if transformProperty is not available
@@ -281,7 +290,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         var pressed,
                             startX,
                             isIndexBound = false,
-                            offset = 500,
+                            offset = (width / 3),
                             destination,
                             swipeMoved = false,
                             //animOnIndexChange = true,
@@ -322,7 +331,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         function updateSlidesPosition(offset) {
                             // manually apply transformation to carousel childrens
                             // todo : optim : apply only to visible items
-                            var x = scope.carouselBufferIndex * 500 + offset;
+                            var x = scope.carouselBufferIndex * (width / 3) + offset;
                             angular.forEach(getSlidesDOM(), function(child, index) {
                                 child.style.cssText = createStyleString(computeCarouselSlideStyle(index, x, options.transitionType));
                             });
@@ -356,7 +365,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                             slideOptions = slideOptions || {};
                             if (slideOptions.animate === false || options.transitionType === 'none') {
                                 locked = false;
-                                offset = index * -500 + 500;
+                                offset = index * -(width / 3) + ((width / 3));
                                 scope.carouselIndex = index;
                                 updateBufferIndex();
                                 return;
@@ -369,7 +378,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                     'x': offset
                                 },
                                 to: {
-                                    'x': index * -500 + 500
+                                    'x': index * -(width / 3) + ((width / 3))
                                 },
                                 duration: options.transitionDuration,
                                 easing: options.transitionEasing,
@@ -379,7 +388,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                 finish: function() {
                                     scope.$apply(function() {
                                         scope.carouselIndex = index;
-                                        offset = index * -500 + 500;
+                                        offset = index * -(width / 3) + ((width / 3));
                                         updateBufferIndex();
                                         $timeout(function () {
                                           locked = false;
@@ -433,7 +442,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                                 delta = startX - x;
                                 if (delta > 2 || delta < -2) {
                                     swipeMoved = true;
-                                    var moveOffset = offset + (-delta * 500 / elWidth);
+                                    var moveOffset = offset + (-delta * (width / 3) / elWidth);
                                     updateSlidesPosition(moveOffset);
                                 }
                             }
@@ -577,7 +586,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                             if (locked) {
                                 return;
                             }
-                            offset += (-destination * 500 / elWidth);
+                            offset += (-destination * (width / 3) / elWidth);
                             if (options.isSequential) {
                                 var minMove = options.moveTreshold * elWidth,
                                     absMove = -destination,
