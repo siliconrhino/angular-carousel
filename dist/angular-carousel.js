@@ -147,7 +147,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
     .service('computeCarouselSlideStyle', ["DeviceCapabilities", function(DeviceCapabilities) {
         // compute transition transform properties for a given slide and global offset
         return function(slideIndex, offset, transitionType) {
-          
+
             var style = {
                     display: 'inline-block'
                 },
@@ -405,6 +405,13 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
 
                         function updateContainerWidth() {
                             elWidth = getContainerWidth();
+                            width = window.innerWidth
+                            || document.documentElement.clientWidth
+                            || document.body.clientWidth;
+
+                            height = window.innerHeight
+                            || document.documentElement.clientHeight
+                            || document.body.clientHeight;
                         }
 
                         function bindMouseUpEvent() {
